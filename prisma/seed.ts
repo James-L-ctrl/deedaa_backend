@@ -205,8 +205,8 @@ async function main() {
       });
     }
 
-    const adminEmail = (process.env.SEED_ADMIN_EMAIL ?? 'admin@deedaa.local').toLowerCase();
-    const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'DeedaaAdmin1';
+    const adminEmail = (process.env.SEED_ADMIN_EMAIL ?? 'admin@deedaa.com').toLowerCase();
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'Password99';
     const customerEmail = (process.env.SEED_CUSTOMER_EMAIL ?? 'demo@deedaa.local').toLowerCase();
     const customerPassword = process.env.SEED_CUSTOMER_PASSWORD ?? 'DeedaaShop1';
 
@@ -218,10 +218,10 @@ async function main() {
       create: {
         email: adminEmail,
         passwordHash: adminHash,
-        name: 'Deedaa Admin',
+        name: 'Admin',
         role: Role.ADMIN,
       },
-      update: { role: Role.ADMIN },
+      update: { role: Role.ADMIN, passwordHash: adminHash },
     });
 
     await prisma.user.upsert({

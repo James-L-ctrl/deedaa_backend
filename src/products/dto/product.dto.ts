@@ -83,3 +83,65 @@ export class CreateProductDto {
   @IsBoolean()
   isPreorder?: boolean;
 }
+
+export class UpdateProductDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  slug?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  description?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(1_000_000)
+  priceCents?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  category?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  rating?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100000)
+  stock?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  featured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  bestseller?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  badge?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPreorder?: boolean;
+}
