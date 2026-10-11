@@ -15,7 +15,21 @@ enum Role {
 enum OrderStatus {
   PENDING
   PAID
-  CANCELLED
+  COD_PENDING
+  COD_CONFIRMED
+  COD_DELIVERED
+  COD_CANCELLED
+  GCASH_PENDING
+  GCASH_COMPLETED
+  GCASH_FAILED
+  GCASH_CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  GCASH
+  COD
 }
 
 model User {
@@ -66,7 +80,7 @@ model CartItem {
 model Order {
   id                 String      @id @default(uuid())
   userId             String
-  status             OrderStatus @default(PAID)
+  status             OrderStatus @default(PENDING)
   subtotalCents      Int
   shippingCents      Int
   totalCents         Int
@@ -75,6 +89,10 @@ model Order {
   shippingCity       String
   shippingPostalCode String
   shippingCountry    String
+  paymentMethod      PaymentMethod?
+  gcashReferenceId   String?     @unique
+  codReferenceId     String?     @unique
+  paidAt             DateTime?
   createdAt          DateTime    @default(now())
   user               User        @relation(fields: [userId], references: [id], onDelete: Restrict)
   items              OrderItem[]

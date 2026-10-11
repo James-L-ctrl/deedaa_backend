@@ -1,4 +1,5 @@
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsString, Matches, MaxLength, MinLength, IsEnum } from 'class-validator';
+import { PaymentMethod } from '../../payment-method.enum';
 
 export class CheckoutDto {
   @IsString()
@@ -27,4 +28,7 @@ export class CheckoutDto {
   @MinLength(2)
   @MaxLength(80)
   shippingCountry: string;
+
+  @IsEnum(PaymentMethod)
+  paymentMethod: PaymentMethod;
 }

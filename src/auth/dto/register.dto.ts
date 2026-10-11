@@ -1,16 +1,12 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength, Matches } from 'class-validator';
+import { ValidatePasswordStrength } from '../decorators/validate-password-strength.decorator';
 
 export class RegisterDto {
   @IsEmail()
   @MaxLength(255)
   email: string;
 
-  @IsString()
-  @MinLength(8)
-  @MaxLength(72)
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d).+$/, {
-    message: 'Password must include a letter and a number',
-  })
+  @ValidatePasswordStrength()
   password: string;
 
   @IsString()
