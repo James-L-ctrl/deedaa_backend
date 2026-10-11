@@ -15,6 +15,7 @@ enum Role {
 enum OrderStatus {
   PENDING
   PAID
+  CANCELLED
   COD_PENDING
   COD_CONFIRMED
   COD_DELIVERED
@@ -34,9 +35,9 @@ enum PaymentMethod {
 
 model User {
   id           String     @id @default(uuid())
-  email        String     @unique
-  passwordHash String
-  name         String
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @db.VarChar(255)
+  name         String     @db.VarChar(120)
   role         Role       @default(CUSTOMER)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -46,11 +47,11 @@ model User {
 
 model Product {
   id          String      @id @default(uuid())
-  slug        String      @unique
+  slug        String      @unique @db.VarChar(255)
   name        String
   description String
   priceCents  Int
-  imageUrl    String
+  imageUrl    String      @db.VarChar(512)
   category    String
   rating      Int         @default(5)
   stock       Int         @default(50)
@@ -84,14 +85,16 @@ model Order {
   subtotalCents      Int
   shippingCents      Int
   totalCents         Int
-  shippingName       String
-  shippingAddress    String
-  shippingCity       String
-  shippingPostalCode String
-  shippingCountry    String
+  shippingName       String      @db.VarChar(120)
+  shippingAddress    String      @db.VarChar(255)
+  shippingCity       String      @db.VarChar(100)
+  shippingPostalCode String      @db.VarChar(12)
+  shippingCountry    String      @db.VarChar(56)
   paymentMethod      PaymentMethod?
-  gcashReferenceId   String?     @unique
-  codReferenceId     String?     @unique
+  gcashReferenceId   String?     @unique @db.VarChar(64)
+  codReferenceId     String?     @unique @db.VarChar(64)
+  statusChangedBy    String?
+  statusChangedAt    DateTime?
   paidAt             DateTime?
   createdAt          DateTime    @default(now())
   user               User        @relation(fields: [userId], references: [id], onDelete: Restrict)
@@ -111,6 +114,6 @@ model OrderItem {
 
 model NewsletterSubscriber {
   id        String   @id @default(uuid())
-  email     String   @unique
+  email     String   @unique @db.VarChar(255)
   createdAt DateTime @default(now())
 }
