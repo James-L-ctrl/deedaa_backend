@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CheckoutDto } from './dto/checkout.dto';
 import { PaymentMethod } from '../payment-method.enum';
 import { EmailService } from '../email/email.service';
+import { OrderStatus } from '../../generated/prisma/client';
 
 const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const SHIPPING_CENTS = 500;
@@ -29,7 +34,9 @@ export class OrdersService {
       for (const item of cartItems) {
         const product = item.product;
         if (!product.isPreorder && product.stock < item.quantity) {
-          throw new BadRequestException(`${product.name} does not have enough stock`);
+          throw new BadRequestException(
+            `${product.name} does not have enough stock`,
+          );
         }
         subtotalCents += product.priceCents * item.quantity;
       }
@@ -50,7 +57,7 @@ export class OrdersService {
       const createdOrder = await tx.order.create({
         data: {
           userId,
-          status: initialStatus,
+          status: initialStatus as OrderStatus,
           subtotalCents,
           shippingCents,
           totalCents: subtotalCents + shippingCents,
@@ -81,7 +88,9 @@ export class OrdersService {
           data: { stock: { decrement: item.quantity } },
         });
         if (updated.count !== 1) {
-          throw new BadRequestException(`${item.product.name} does not have enough stock`);
+          throw new BadRequestException(
+            `${item.product.name} does not have enough stock`,
+          );
         }
       }
 

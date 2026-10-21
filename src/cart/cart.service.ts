@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddCartItemDto } from './dto/cart.dto';
 
@@ -46,7 +50,9 @@ export class CartService {
       return this.getCart(userId);
     }
 
-    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
@@ -69,7 +75,11 @@ export class CartService {
   async merge(userId: string, items: AddCartItemDto[]) {
     const safeItems = Array.isArray(items) ? items.slice(0, 50) : [];
     for (const item of safeItems) {
-      if (!item?.productId || !Number.isInteger(item.quantity) || item.quantity < 1) {
+      if (
+        !item?.productId ||
+        !Number.isInteger(item.quantity) ||
+        item.quantity < 1
+      ) {
         continue;
       }
       await this.addItem(userId, {
@@ -90,7 +100,9 @@ export class CartService {
     quantity: number,
   ) {
     if (!product.isPreorder && product.stock < quantity) {
-      throw new BadRequestException(`${product.name} does not have enough stock`);
+      throw new BadRequestException(
+        `${product.name} does not have enough stock`,
+      );
     }
   }
 

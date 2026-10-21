@@ -13,7 +13,9 @@ import {
  * - At least one number
  * - At least one special character
  */
-export function ValidatePasswordStrength(validationOptions?: ValidationOptions) {
+export function ValidatePasswordStrength(
+  validationOptions?: ValidationOptions,
+) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'validatePasswordStrength',
@@ -39,8 +41,8 @@ export function ValidatePasswordStrength(validationOptions?: ValidationOptions) 
             hasSpecialChar
           );
         },
-        defaultMessage(args: ValidationArguments) {
-          return `Password must be at least ${8} characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.`;
+        defaultMessage() {
+          return `Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.`;
         },
       },
     });

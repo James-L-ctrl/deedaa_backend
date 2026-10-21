@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateProductDto, ProductQueryDto, UpdateProductDto } from './dto/product.dto';
+import {
+  CreateProductDto,
+  ProductQueryDto,
+  UpdateProductDto,
+} from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -61,7 +65,9 @@ export class ProductsService {
 
     // If slug is being updated, check for uniqueness
     if (dto.slug) {
-      const existing = await this.prisma.product.findUnique({ where: { slug: dto.slug } });
+      const existing = await this.prisma.product.findUnique({
+        where: { slug: dto.slug },
+      });
       if (existing && existing.id !== id) {
         throw new Error('A product with this slug already exists');
       }

@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CheckoutDto } from './dto/checkout.dto';
 import { OrdersService } from './orders.service';
-import { PaymentMethod } from '../payment-method.enum';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)

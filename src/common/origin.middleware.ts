@@ -21,7 +21,9 @@ export class OriginMiddleware implements NestMiddleware {
     }
 
     if (!allowed.includes(origin)) {
-      res.status(403).json({ statusCode: 403, message: 'Origin is not allowed' });
+      res
+        .status(403)
+        .json({ statusCode: 403, message: 'Origin is not allowed' });
       return;
     }
 

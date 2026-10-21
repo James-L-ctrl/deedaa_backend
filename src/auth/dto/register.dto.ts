@@ -1,4 +1,10 @@
-import { IsEmail, IsString, MaxLength, MinLength, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MaxLength,
+  MinLength,
+  Matches,
+} from 'class-validator';
 import { ValidatePasswordStrength } from '../decorators/validate-password-strength.decorator';
 
 export class RegisterDto {

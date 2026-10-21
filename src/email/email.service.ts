@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
-import { Order, OrderItem } from '../../generated/prisma/client';
+import { Order } from '../../generated/prisma/client';
 
-interface OrderWithItems extends Order {
-  items: (OrderItem & { name: string })[];
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 @Injectable()
@@ -40,21 +40,31 @@ export class EmailService {
     customerEmail: string,
     items: { name: string; quantity: number }[],
   ) {
-    const paymentMethodDisplay = order.paymentMethod === 'GCASH' ? 'GCash' : 'Cash on Delivery';
+    const paymentMethodDisplay =
+      order.paymentMethod === 'GCASH' ? 'GCash' : 'Cash on Delivery';
 
     const mailOptions = {
       from: `deedaa <${process.env.SMTP_FROM || 'no-reply@deedaa.local'}>`,
       to: customerEmail,
       subject: `Order Confirmation #${order.id} - deedaa`,
-      html: this.getOrderConfirmationTemplate(order, customerName, paymentMethodDisplay, items),
+      html: this.getOrderConfirmationTemplate(
+        order,
+        customerName,
+        paymentMethodDisplay,
+        items,
+      ),
     };
 
     try {
       await this.transporter.sendMail(mailOptions);
-      this.logger.log(`Order confirmation email sent to ${customerEmail} for order ${order.id}`);
+      this.logger.log(
+        `Order confirmation email sent to ${customerEmail} for order ${order.id}`,
+      );
       return true;
     } catch (error) {
-      this.logger.error(`Failed to send order confirmation email: ${error.message}`);
+      this.logger.error(
+        `Failed to send order confirmation email: ${errorMessage(error)}`,
+      );
       return false;
     }
   }
@@ -62,7 +72,12 @@ export class EmailService {
   /**
    * Send GCash payment receipt
    */
-  async sendGcashReceipt(order: Order, gcashReferenceId: string, amount: number, customerEmail: string) {
+  async sendGcashReceipt(
+    order: Order,
+    gcashReferenceId: string,
+    amount: number,
+    customerEmail: string,
+  ) {
     const mailOptions = {
       from: `deedaa <${process.env.SMTP_FROM || 'no-reply@deedaa.local'}>`,
       to: customerEmail,
@@ -72,10 +87,14 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-      this.logger.log(`GCash receipt email sent to ${customerEmail} for order ${order.id}`);
+      this.logger.log(
+        `GCash receipt email sent to ${customerEmail} for order ${order.id}`,
+      );
       return true;
     } catch (error) {
-      this.logger.error(`Failed to send GCash receipt email: ${error.message}`);
+      this.logger.error(
+        `Failed to send GCash receipt email: ${errorMessage(error)}`,
+      );
       return false;
     }
   }
@@ -93,10 +112,14 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-      this.logger.log(`COD confirmation email sent to ${customerEmail} for order ${order.id}`);
+      this.logger.log(
+        `COD confirmation email sent to ${customerEmail} for order ${order.id}`,
+      );
       return true;
     } catch (error) {
-      this.logger.error(`Failed to send COD confirmation email: ${error.message}`);
+      this.logger.error(
+        `Failed to send COD confirmation email: ${errorMessage(error)}`,
+      );
       return false;
     }
   }
@@ -110,7 +133,8 @@ export class EmailService {
     paymentMethod: string,
     items: { name: string; quantity: number }[],
   ): string {
-    const paymentMethodLabel = paymentMethod === 'GCASH' ? 'GCash' : 'Cash on Delivery';
+    const paymentMethodLabel =
+      paymentMethod === 'GCASH' ? 'GCash' : 'Cash on Delivery';
 
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -158,7 +182,11 @@ export class EmailService {
   /**
    * GCash receipt template
    */
-  private getGcashReceiptTemplate(order: Order, gcashReferenceId: string, amount: number): string {
+  private getGcashReceiptTemplate(
+    order: Order,
+    gcashReferenceId: string,
+    amount: number,
+  ): string {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #4A3F3F; text-align: center;">Payment Receipt</h2>

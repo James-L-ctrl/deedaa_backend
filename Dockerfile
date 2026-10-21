@@ -5,6 +5,8 @@ RUN npm ci
 
 FROM node:22-alpine AS production-dependencies-env
 COPY ./package.json package-lock.json /app/
+# 1. Copy the prisma schema so `prisma generate` can run successfully during install scripts
+COPY ./prisma /app/prisma
 WORKDIR /app
 RUN npm ci --omit=dev
 

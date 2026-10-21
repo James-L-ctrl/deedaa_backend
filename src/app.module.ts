@@ -15,8 +15,8 @@ import { ProductsModule } from './products/products.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      validate: (config) => {
-        const secret = config.JWT_SECRET;
+      validate: (config: Record<string, unknown>) => {
+        const secret = config.JWT_SECRET as string;
         if (!secret || String(secret).length < 32) {
           throw new Error('JWT_SECRET must be set and at least 32 characters');
         }
