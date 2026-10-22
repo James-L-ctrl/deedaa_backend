@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: deedaa-backend
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: SEED_ADMIN_EMAIL
+        sync: false
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+      - key: SEED_CUSTOMER_EMAIL
+        sync: false
+      - key: SEED_CUSTOMER_PASSWORD
+        sync: false
+    autoDeploy: true
