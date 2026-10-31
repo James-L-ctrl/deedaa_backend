@@ -45,12 +45,11 @@ export class AuthService {
   async login(dto: LoginDto, res: Response) {
     const email = dto.email.toLowerCase().trim();
     const user = await this.prisma.user.findUnique({ where: { email } });
-    const dummyHash =
-      '$2a$12$C6UzMDM.H6dfI/f/IKcEe.O8YkJ9u8YQeS5mQqY3xYl6mYfGQw6a';
-    const hash = user?.passwordHash ?? dummyHash;
-    const matches = await bcrypt.compare(dto.password, hash);
-
-    if (!user || !matches) {
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+    const matches = await bcrypt.compare(dto.password, user.passwordHash);
+    if (!matches) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
