@@ -10,6 +10,8 @@ import { NewsletterModule } from './newsletter/newsletter.module';
 import { OrdersModule } from './orders/orders.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductsModule } from './products/products.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { CouponsModule } from './coupons/coupons.module';
 
 @Module({
   imports: [
@@ -35,7 +37,9 @@ import { ProductsModule } from './products/products.module';
     CartModule,
     OrdersModule,
     NewsletterModule,
-  ],
+        ReviewsModule,
+        CouponsModule,
+      ],
   controllers: [HealthController],
   providers: [
     {

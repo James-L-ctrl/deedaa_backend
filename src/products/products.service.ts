@@ -35,12 +35,26 @@ export class ProductsService {
 
     return this.prisma.product.findMany({
       where,
+      include: {
+        reviews: {
+          include: { user: { select: { name: true } } },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
       orderBy: [{ featured: 'desc' }, { bestseller: 'desc' }, { name: 'asc' }],
     });
   }
 
   async findBySlug(slug: string) {
-    const product = await this.prisma.product.findUnique({ where: { slug } });
+    const product = await this.prisma.product.findUnique({
+      where: { slug },
+      include: {
+        reviews: {
+          include: { user: { select: { name: true } } },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
@@ -53,6 +67,10 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
     return product;
+  }
+
+  async getCategories() {
+    return this.prisma.category.findMany({ orderBy: { name: 'asc' } });
   }
 
   create(dto: CreateProductDto) {
